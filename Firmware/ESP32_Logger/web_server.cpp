@@ -10,9 +10,10 @@ static void data() {
     String j = "{"sample_id":" + String(s.id) + ","uptime_ms":" + String(s.uptime_ms);
     j += ","valid":" + String(s.valid ? "true" : "false");
     j += ","voltage_v":" + number(s.voltage_v, 5) + ","current_ma":" + number(s.current_ma, 5);
-    j += ","power_mw":" + number(s.power_mw, 5) + ","session_energy_wh":" + String(logger.session_energy.watt_hours, 6);
+    j += ","power_mw":" + number(s.power_mw, 5) + ","device_energy_wh":" + String(logger.device_energy.watt_hours, 6);
+    j += ","session_energy_wh":" + String(logger.session_energy.watt_hours, 6);
     j += ","recording":" + String(logger.recording ? "true" : "false") + ","full":" + (logger.full ? "true" : "false");
-    j += ","count":" + String(logger.count) + ","capacity":" + String(LOG_CAPACITY) + ","graph":[";
+    j += ","count":" + String(logger.count) + ","capacity":" + String(logger.entries ? LOG_CAPACITY : 0) + ","graph":[";
     unsigned start = (logger.graph_head + GRAPH_CAPACITY - logger.graph_count) % GRAPH_CAPACITY;
     for (unsigned i = 0; i < logger.graph_count; ++i) { if (i) j += ","; j += number(logger.graph[(start + i) % GRAPH_CAPACITY]); }
     j += "]}"; server.send(200, "application/json", j);
@@ -25,6 +26,7 @@ static void csv() {
 ");
     char row[160];
     for (unsigned i = 0; i < logger.count; ++i) {
+        if (!server.client().connected()) break;
         const LogEntry &e = logger.entries[i];
         if (e.valid) snprintf(row, sizeof(row), "%.3f,%.5f,%.5f,%.5f,%.7f,1
 ", e.elapsed_ms / 1000.0, e.voltage_v, e.current_ma, e.power_mw, e.energy_wh);
@@ -37,10 +39,16 @@ static void csv() {
 void Web_Begin() {
     server.on("/", HTTP_GET, []() { server.send_P(200, "text/html", DASHBOARD_HTML); });
     server.on("/data", HTTP_GET, data);
-    server.on("/start", HTTP_POST, []() { logger.start(); server.send(200, "application/json", "{"ok":true}"); });
+    server.on("/start", HTTP_POST, []() {
+        if (logger.recording) { server.send(409, "text/plain", "Already recording"); return; }
+        if (logger.count) { server.send(409, "text/plain", "Export and reset the previous session first"); return; }
+        if (!logger.start()) { server.send(503, "text/plain", "Recording memory unavailable"); return; }
+        server.send(200, "application/json", "{"ok":true}");
+    });
     server.on("/stop", HTTP_POST, []() { logger.stop(); server.send(200, "application/json", "{"ok":true}"); });
     server.on("/reset", HTTP_POST, []() { logger.reset(); server.send(200, "application/json", "{"ok":true}"); });
     server.on("/csv", HTTP_GET, csv);
+    server.onNotFound([]() { server.send(404, "text/plain", "Not found"); });
     server.begin();
 }
 void Web_Update() { server.handleClient(); }

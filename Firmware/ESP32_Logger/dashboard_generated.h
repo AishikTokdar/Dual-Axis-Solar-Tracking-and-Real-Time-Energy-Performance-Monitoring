@@ -36,15 +36,17 @@ canvas{display:block;width:100%;height:260px}button,.button{padding:10px 14px;ba
 </div>
 <footer><p id="status">Waiting for device.</p></footer>
 </main><script>const $ = id => document.getElementById(id);
+let pendingRefresh = null, actionBusy = false, online = false, lastData = null;
 function display(v, d = 2) { return Number.isFinite(v) ? v.toFixed(d) : '--'; }
 function render(d) {
+  lastData = d; online = true;
   $('connection').textContent = d.valid ? 'Live' : 'Sensor unavailable';
   $('voltage').textContent = display(d.voltage_v, 3);
   $('current').textContent = display(d.current_ma, 2);
   $('power').textContent = display(d.power_mw, 1);
   $('energy').textContent = display(d.session_energy_wh, 5);
   $('count').textContent = d.count + ' / ' + d.capacity;
-  $('recording').textContent = d.recording ? 'Recording' : 'Idle';
+  $('recording').textContent = d.full ? 'Buffer full' : (d.recording ? 'Recording' : 'Idle');
   const c = $('chart'), ctx = c.getContext('2d');
   c.width = c.clientWidth; c.height = c.clientHeight;
   ctx.clearRect(0, 0, c.width, c.height);
@@ -60,16 +62,24 @@ function render(d) {
   });
   ctx.stroke();
 }
-async function refresh() {
+async function loadSnapshot() {
   try {
-    const r = await fetch('/data', { cache: 'no-store' });
-    if (r.ok) render(await r.json());
-  } catch (e) {
-    $('connection').textContent = 'Offline';
-  }
+    const r = await fetch('/data', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+    if (!r.ok) throw Error('Request failed');
+    render(await r.json());
+  } catch (e) { online = false; $('connection').textContent = 'Offline'; }
+}
+function refresh() {
+  if (!pendingRefresh) pendingRefresh = loadSnapshot().finally(() => { pendingRefresh = null; });
+  return pendingRefresh;
 }
 for (const cmd of ['start', 'stop', 'reset']) {
-  $(cmd).addEventListener('click', () => fetch('/' + cmd, { method: 'POST' }).then(refresh));
+  $(cmd).addEventListener('click', () => {
+    if (!actionBusy && online) {
+      actionBusy = true;
+      fetch('/' + cmd, { method: 'POST', signal: AbortSignal.timeout(5000) }).then(refresh).finally(() => { actionBusy = false; });
+    }
+  });
 }
-setInterval(refresh, 1000);</script>
+refresh(); setInterval(refresh, 1000);</script>
 </body></html>)SOLARHTML";
