@@ -4,7 +4,7 @@
 |---|---|
 | [Tracked session](Raw/session-001/tracker.csv) | Tracked-panel device export; 10,801 samples over 10,800 seconds |
 | [Fixed session](Raw/session-001/fixed.csv) | Fixed-panel device export; 10,801 samples over 10,800 seconds |
-| [Session metadata](Raw/session-001/metadata.json) | Session parameters |
+| [Session metadata](Raw/session-001/metadata.json) | Session parameters and SHA-256 checksums |
 | [Reported summary](Reference/reported_summary.csv) | Aggregate values from hardware experiments |
 | [Metadata template](session_metadata.example.json) | Template for future captures |
 

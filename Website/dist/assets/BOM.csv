@@ -1,0 +1,11 @@
+Item,Specification,Quantity,Role,Verification
+STM32 board,NUCLEO-G031K8,1,Light-feedback control,Configured target
+ESP32 board,ESP32-WROOM-32 development board,1,Power logger and HTTP server,Configured target esp32dev
+LDR,GL5528-class,4,Directional light sensing,Confirm fitted part marking
+Divider resistor,10 kohm,4,LDR voltage divider,Existing schematic
+Power monitor,INA226 breakout with 0.1 ohm shunt,1,Voltage and current measurement,Verify actual shunt
+Pan and tilt servos,5 V hobby servos,2,Panel orientation,Verify fitted model before mechanical limit calibration
+Solar panel,6 V 150 mA nominal,2,Tracked and fixed observations,Existing report specification
+Load resistor,47 ohm 5 W,1,Shared load in sequential trials,Existing schematic
+Servo power supply,5 V 3 A nominal,1,External actuator supply,Existing README specification
+Printed frame,Third-party STL assembly,1,Panel support,See CAD/ATTRIBUTION.md
