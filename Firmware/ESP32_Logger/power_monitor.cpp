@@ -36,6 +36,7 @@ static bool ready=false;
 static uint32_t sequence=0, last_retry=0;
 void PowerMonitor_Begin() {
     Wire.begin(I2C_SDA,I2C_SCL);
+    Wire.setTimeOut(20);
     ready=monitor.init();
     if (ready) {
         monitor.setResistorRange(SHUNT_OHMS,MAX_CURRENT_A);
@@ -45,7 +46,10 @@ void PowerMonitor_Begin() {
 }
 PowerSample PowerMonitor_Read(uint32_t now) {
     PowerSample s; s.id=++sequence; s.uptime_ms=now;
-    if (!ready) return s;
+    if (!ready) {
+        if (now-last_retry>=5000) { last_retry=now; PowerMonitor_Begin(); }
+        return s;
+    }
     if (!monitor.output(s.voltage_v,s.current_ma)) {
         ready=false; s.voltage_v=s.current_ma=NAN; return s;
     }

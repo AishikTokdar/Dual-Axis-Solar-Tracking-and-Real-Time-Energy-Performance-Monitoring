@@ -20,7 +20,6 @@
   "weather_and_shading": null,
   "operator_notes": "Original acquisition notes are required to resolve panel identifiers, start times, orientation, weather, calibration, acquisition method, firmware revision, and processing history. Unknown values have not been inferred from the report publication date or current firmware.",
   "schema_version": 1,
-  "notes": "Compare tracked vs fixed under sequential protocol",
   "processing_history": null,
   "acquisition_method": null,
   "metadata_status": "incomplete_acquisition_record",
