@@ -1,0 +1,12 @@
+{
+  "session_id": "session-001",
+  "data_kind": "owner_supplied_device_export",
+  "protocol": "sequential",
+  "tracker_start_utc": null,
+  "fixed_start_utc": null,
+  "duration_s": 10800,
+  "panel_identifiers": { "tracker": null, "fixed": null },
+  "panel_rated_w": 0.9,
+  "load_ohms": 47,
+  "shunt_ohms": 0.1
+}

@@ -1,0 +1,26 @@
+{
+  "session_id": "replace-with-run-identifier",
+  "data_kind": "device_export",
+  "protocol": null,
+  "tracker_start_utc": null,
+  "fixed_start_utc": null,
+  "local_timezone": null,
+  "duration_s": null,
+  "panel_identifiers": {
+    "tracker": null,
+    "fixed": null
+  },
+  "panel_rated_w": null,
+  "load_ohms": null,
+  "shunt_ohms": null,
+  "fixed_azimuth_deg": null,
+  "fixed_tilt_deg": null,
+  "firmware_revision": null,
+  "calibration_record": null,
+  "weather_and_shading": null,
+  "operator_notes": "Record actual conditions. Start timestamps refer to Time_s=0; distinguish device RAM exports from host captures. Record none only when no processing is confirmed; leave unknown details null. Document firmware commit/build identifier and calibration record, not just the current repository version.",
+  "schema_version": 1,
+  "processing_history": null,
+  "acquisition_method": null,
+  "parameter_sources": {}
+}

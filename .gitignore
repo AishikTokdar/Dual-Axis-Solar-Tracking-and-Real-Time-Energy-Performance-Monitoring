@@ -6,4 +6,6 @@ Release/
 *.bin
 __pycache__/
 *.pyc
+.venv/
 secrets.h
+Data/Raw/local/

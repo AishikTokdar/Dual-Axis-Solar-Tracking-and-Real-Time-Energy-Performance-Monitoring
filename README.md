@@ -20,6 +20,12 @@ A dual-microcontroller prototype combining STM32 LDR pan-tilt tracking with ESP3
 
 Copy `Firmware/ESP32_Logger/secrets.example.h` to `Firmware/ESP32_Logger/secrets.h` (git-ignored) before flashing the ESP32.
 
+## Assembly and datasets
+
+![Physical assembly](Images/system_photo.jpeg)
+
+Paired 3-hour exports (`10,801` samples) are stored in [Data](Data/README.md). See [Calibration](Hardware/Calibration.md) and the [static project website](Website/dist/index.html).
+
 ## Quick build
 
 ```powershell

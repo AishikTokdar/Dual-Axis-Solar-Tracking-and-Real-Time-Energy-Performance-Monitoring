@@ -1,0 +1,6 @@
+Metric,Tracker,Fixed,Unit,Source
+peak_power,670.0,315.0,mW,original_project_report.pdf Table 10.1
+average_power,470.8,190.2,mW,original_project_report.pdf Table 10.1
+energy,1.4125,0.5707,Wh,original_project_report.pdf Table 10.1
+peak_rated_power_utilization,74.44,35.00,percent,original_project_report.pdf Table 10.1 labelled efficiency
+average_rated_power_utilization,52.31,21.14,percent,original_project_report.pdf Table 10.1 labelled efficiency
