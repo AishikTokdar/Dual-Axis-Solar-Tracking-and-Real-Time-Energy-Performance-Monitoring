@@ -548,4 +548,14 @@ Original print notes specify PLA and 15% infill. Verify part fit and orientation
 
 ## 13. Limitations
 
-Sequential trials and fixed load scope apply.
+The hardware results were obtained in sequential tracking and fixed-panel sessions. Weather differences between sessions are part of the experimental conditions. The fixed load does not establish maximum available panel power. Irradiance, panel angle, and actuator energy are not measured.
+
+Nominal cadence does not establish measured jitter or accuracy. RAM capture is limited and volatile; use [host capture](Tools/capture_session.py) for multi-hour trials.
+
+## 14. Authorship and license
+
+Project author: **Aishik Tokdar**.
+
+STL assets credit the original designer of [Solar Tracker Tilt/Pan Panel Frame LDR Mounts Rig](https://www.instructables.com/SOLAR-TRACKER-TILTPAN-PANEL-FRAME-LDR-MOUNTS-RIG/). They retain their source terms and are not claimed as original CAD.
+
+Project software uses the [MIT license](LICENSE). Vendor code and dependencies (STM32 HAL, CMSIS, INA226_WE, and Arduino/ESP32 frameworks) retain their notices and licenses; the root license does not relicense third-party CAD.
