@@ -45,3 +45,4 @@ for (const cmd of ['start', 'stop', 'reset']) {
   });
 }
 refresh(); setInterval(refresh, 1000);
+window.addEventListener('resize', () => { if (lastData) render(lastData); });

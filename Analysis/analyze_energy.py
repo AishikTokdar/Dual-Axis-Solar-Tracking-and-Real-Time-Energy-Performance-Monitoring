@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 def load_session(path):
-    with Path(path).open(newline="", encoding="utf-8") as f:
+    with Path(path).open(newline="", encoding="utf-8-sig") as f:
         rows = list(csv.DictReader(f))
     total = covered = 0.0
     for a, b in zip(rows, rows[1:]):
