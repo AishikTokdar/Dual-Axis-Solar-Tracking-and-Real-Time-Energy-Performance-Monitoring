@@ -499,4 +499,53 @@ python -m http.server 8000 --directory Website/dist
 
 Open `http://localhost:8000` to preview the static bundle locally. Pushing changes under `Website/dist/` to `main` triggers the GitHub Pages workflow.
 
-See Sections 10.1-10.10 above before running analysis.
+### 10.11 Troubleshooting the full path
+
+| Symptom | What to check |
+|---|---|
+| USB board/port missing | Data-capable cable, correct USB connector, board-specific driver, and `python -m platformio device list`. |
+| Upload cannot open COM port | Select the ESP32 port and close its serial monitor or other port users. STM32 uses ST-Link for upload. |
+| ESP32 never prints a dashboard address | Actual `secrets.h` credentials, compatible local Wi-Fi, router association, and serial baud 115200. |
+| Browser cannot open the device | Same network, correct current IP, and no client isolation between browser and logger. The presentation website is not the device server. |
+| Sensor unavailable or invalid | INA226 VCC/GND, SDA/SCL, address straps, fitted shunt/configuration, current polarity, and voltage-sense node. |
+| Servos reset the board or move incorrectly | External supply/ground wiring, supported pulse limits, quadrant labels, mounting direction, and mechanical clearance. |
+| Start/export disabled | Export any previous session before Reset; Start requires an empty session and export requires stopped recording. |
+| Capture says file exists | Preserve the earlier capture and choose a new run directory/output name. |
+| Analysis rejects data | CSV schema and units, reset/decreasing timestamps or energy, equal valid durations, gaps, protocol, and metadata/hash mismatch. |
+| Acquisition warnings remain | Supply actual acquisition notes and firmware/processing history. Do not change recorded values or invent metadata to clear a warning. |
+
+## 11. Energy analysis workflow
+
+![Analysis and publishing architecture](Images/Project_Final_Analysis.png)
+
+[Full-resolution analysis and publishing diagram](Images/Project_Final_Analysis.png).
+
+```powershell
+python -m pip install -r Analysis/requirements.txt
+python Analysis/analyze_energy.py --tracker Data/Raw/run/tracker.csv --fixed Data/Raw/run/fixed.csv --metadata Data/Raw/run/metadata.json --output Analysis/Results/run
+```
+
+The [deployment workflow](.github/workflows/deploy-website.yml) publishes `Website/dist/` directly to GitHub Pages.
+
+For MATLAB:
+
+```matlab
+addpath('Analysis/MATLAB')
+analyze_energy_performance('Data/Raw/run/tracker.csv', 'Data/Raw/run/fixed.csv', 'Analysis/Results/run');
+```
+
+[Analysis instructions](Analysis/README.md) | [Data organization](Data/README.md)
+
+## 12. Assembly and media
+
+![Physical assembly](Images/system_photo.jpeg)
+
+[System demonstration video](Videos/system_demonstration.mp4)
+
+Original print notes specify PLA and 15% infill. Verify part fit and orientation for the fitted servos and panel.
+
+[Assembly details](CAD/README.md) | [CAD credits](CAD/ATTRIBUTION.md)
+
+## 13. Limitations
+
+Sequential trials and fixed load scope apply.
