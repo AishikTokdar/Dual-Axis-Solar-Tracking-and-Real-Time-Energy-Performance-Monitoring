@@ -1,0 +1,20 @@
+{
+  "evidence_type": "Hardware experiment measurements summarized in the original project report",
+  "source": "Docs/Reference/original_project_report.pdf",
+  "source_table": "10.1 (PDF page 12)",
+  "source_sha256": "43d64406c9245f357f609beda5a6cd890c937b2eb39b3b660547889419d38fbc",
+  "tracked_energy_wh": 1.4125,
+  "fixed_energy_wh": 0.5707,
+  "energy_difference_wh": 0.8418000000000001,
+  "gross_energy_gain_pct": 147.50306640967236,
+  "nominal_panel_rating_w": 0.9,
+  "raw_csv_included": true,
+  "experiment_type": "sequential hardware measurements",
+  "measured_conversion_efficiency_available": false,
+  "measured_net_energy_available": false,
+  "raw_csv_paths": [
+    "Data/Raw/session-001/tracker.csv",
+    "Data/Raw/session-001/fixed.csv"
+  ],
+  "raw_csv_provenance": "Project owner identifies supplied files as device exports; acquisition dates, calibration, acquisition firmware, and processing history are unresolved. Supplied voltage/export characteristics differ from the current firmware."
+}

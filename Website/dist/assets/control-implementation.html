@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Control implementation | Solar Tracking</title><style>body{max-width:850px;margin:50px auto;padding:0 24px;font:16px/1.7 system-ui;color:#203530;background:#f4f7f5}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}a{color:inherit}</style><a href="../index.html#control">Back to project</a><pre># Tracking control
+
+![Control flow](../Images/STM32_Architecture.png)
+
+## Acquisition and filtering
+
+Channels are ordered top-left, top-right, bottom-left, bottom-right. Three ADC readings per channel are averaged. Each independent scalar Kalman filter initializes from its first valid reading and uses process covariance Q=2 and measurement covariance R=200.
+
+`ambient = (TL + TR + BL + BR) / 4`
+
+`pan_measurement = (TR + BR - TL - BL) / 2`
+
+`tilt_measurement = (BL + BR - TL - TR) / 2`
+
+These are differential light measurements in ADC counts. They are not calibrated sun angles or irradiance.
+
+## Activation and PID
+
+Entry tolerance varies linearly from 50 to 80 ADC counts with filtered ambient level. An idle axis activates after two consecutive readings at or above entry tolerance. An active axis remains active until absolute imbalance falls to 40% of entry tolerance. This separate exit threshold provides state memory.
+
+Each axis uses Kp=0.0045, Ki=0.002, Kd=0.0005, trapezoidal integration clamped to +/-20, and a bilinear low-pass derivative on measurement. The update uses actual elapsed seconds. Invalid, nonpositive, or greater than 100 ms dt causes a hold and clears controller state.
+
+PID output changes a pulse-width target rather than a measured angle. Command direction must be confirmed on the physical frame. Limits and smoothing follow the control calculation:
+
+| Parameter | Value | Source |
+|---|---|---|
+| Pan target limits | 500-2000 us | `tracker_config.h` |
+| Tilt target limits | 500-1300 us | `tracker_config.h` |
+| Home commands | 1250 / 900 us | `tracker_config.h` |
+| Target slew cap | 15 us per update | `tracker_config.h` |
+| Output smoothing | 0.95 | `tracker_config.h` |
+| Low-light hold | Ambient below 100 ADC counts | `tracker_config.h` |
+| Startup ramp | 50 steps x 20 ms | `main.c` |
+
+At a target limit, integral accumulation that drives further into saturation is cleared. Invalid ADC results hold the last pulse command and reset filter initialization. Low light clears axis state and holds current commands. Sensor rails alone cannot distinguish a disconnected LDR from darkness or strong illumination; wiring checks remain necessary.
+
+## Timing evidence
+
+Nominal schedule: 5 ms, equivalent to a 200 Hz target. PWM frame: 20 ms, equivalent to 50 Hz from configured clock values. The debugger exposes `tracker_overruns`, `tracker_adc_failures`, and `tracker_max_loop_ms`. Observed frequency, execution jitter, and angular accuracy require hardware records.
+</pre></html>

@@ -1,0 +1,17 @@
+{
+  "evidence": "Hardware experiment results from the original project report",
+  "metrics": {
+    "energy": {
+      "tracker": 1.4125,
+      "fixed": 0.5707
+    },
+    "peak_power": {
+      "tracker": 670.0,
+      "fixed": 315.0
+    },
+    "average_power": {
+      "tracker": 470.8,
+      "fixed": 190.2
+    }
+  }
+}
