@@ -26,7 +26,7 @@ The application runs cooperatively. HTTP work and I2C timeouts can delay a sampl
 - PWM: pan and tilt command pulse widths from TIM1.
 - I2C: INA226 electrical measurements into ESP32.
 - HTTP GET `/data`: cached measurements, validity, recording state, and sample age.
-- HTTP POST `/start`, `/stop`, `/reset`: session operations.
+- HTTP POST `/start`, `/stop`, `/reset`: session operations (`X-Solar-Action: 1`, exact IP `Host` header).
 - HTTP GET `/csv`: stopped session export.
 - USB serial: continuous CSV telemetry for diagnostics.
 

@@ -93,7 +93,7 @@ async function action(name){
  if(name==='reset'&&!confirm('Clear recorded data and energy counters? Export your session first.'))return;
  actionBusy=true;controls();
  try{
-   const response=await fetch('/'+name,{method:'POST',signal:AbortSignal.timeout(5000)});
+   const response=await fetch('/'+name,{method:'POST',headers:{'X-Solar-Action':'1'},signal:AbortSignal.timeout(5000)});
    if(!response.ok)throw Error(await response.text());
    if(pendingRefresh)await pendingRefresh;
    await refresh();

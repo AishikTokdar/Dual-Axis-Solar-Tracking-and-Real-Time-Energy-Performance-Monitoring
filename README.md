@@ -8,7 +8,7 @@ A dual-microcontroller prototype combining STM32 LDR pan-tilt tracking with ESP3
 ## Structure
 
 - `Firmware/STM32_Tracker/` - `ldr_sensors.c`, `kalman_filter.c`, `tracking_control.c`
-- `Firmware/ESP32_Logger/` - INA226 power logger, RAM session recorder, and `/data` `/csv` HTTP server
+- `Firmware/ESP32_Logger/` - INA226 power logger, RAM session recorder, and Host/CSRF-hardened `/data` `/csv` HTTP server
 - `Dashboard/` - Local live UI packaged via `Tools/package_dashboard.py`
 - `Data/` - [Measurement schema](Data/Schema.md) and long-duration sessions via `Tools/capture_session.py`
 - `Hardware/` - [Pin mapping](Hardware/Pin_Mapping.md), [BOM](Hardware/BOM.csv), [schematic](Hardware/Schematics/hardware_schematic.pdf)

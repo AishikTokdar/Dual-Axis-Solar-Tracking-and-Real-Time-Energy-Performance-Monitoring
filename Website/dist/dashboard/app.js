@@ -44,7 +44,7 @@ function controls(){
  $('stop').disabled=!available||!d.recording;
  $('reset').disabled=!available;
  const exportable=available&&!d.recording&&d.count>0;
- $('download').classList.toggle('disabled',!exportable);
+ $('download').classList.toggle('disabled',!exportable);$('download').setAttribute('aria-disabled',String(!exportable));$('download').tabIndex=exportable?0:-1;
  for(const id of ['start','stop','reset'])$(id).setAttribute('aria-busy',String(actionBusy));
 }
 function freshness(){
@@ -93,7 +93,7 @@ async function action(name){
  if(name==='reset'&&!confirm('Clear recorded data and energy counters? Export your session first.'))return;
  actionBusy=true;controls();
  try{
-   const response=await fetch('/'+name,{method:'POST',signal:AbortSignal.timeout(5000)});
+   const response=await fetch('/'+name,{method:'POST',headers:{'X-Solar-Action':'1'},signal:AbortSignal.timeout(5000)});
    if(!response.ok)throw Error(await response.text());
    if(pendingRefresh)await pendingRefresh;
    await refresh();
