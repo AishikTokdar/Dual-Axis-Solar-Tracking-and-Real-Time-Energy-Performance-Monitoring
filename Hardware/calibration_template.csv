@@ -1,1 +1,1 @@
-Date_UTC,Panel_ID,Shunt_Ohms,Device_V,Ref_V,Device_mA,Ref_mA,Notes
+Date,Channel,ReferenceValue,DeviceValue,Unit,ReferenceInstrument,FirmwareRevision,Notes

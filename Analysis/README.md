@@ -11,6 +11,8 @@ python Analysis/analyze_energy.py --tracker Data/Raw/session-001/tracker.csv --f
 
 The parser validates CSV columns, strictly increasing timestamps, electrical consistency (`P = V * I`), and sample validity flags. Energy uses trapezoidal integration over valid adjacent samples no more than 2.5 s apart. Comparative gain requires equal observation durations, zero excluded intervals, and positive fixed-panel energy.
 
+Use `--require-complete-metadata` when incomplete acquisition metadata should block summary output.
+
 ## MATLAB workflow
 
 ```matlab

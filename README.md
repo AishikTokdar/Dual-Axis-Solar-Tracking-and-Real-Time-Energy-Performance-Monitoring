@@ -42,4 +42,4 @@ python -m platformio run -e esp32_logger
 
 ![Experimental performance](Analysis/Results/reported_comparison.png)
 
-Updated control hysteresis (50-80 counts, 40% exit), INA226 register checks (`CheckedINA226`), dashboard freshness (`>2.5 s`), and matching `<=2.5 s` gap exclusion in Python/MATLAB analysis.
+Run `python Analysis/analyze_energy.py` or `Analysis/MATLAB/analyze_energy_performance.m` (pass `--require-complete-metadata` to enforce resolved metadata and SHA-256 checksums).

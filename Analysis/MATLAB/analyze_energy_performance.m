@@ -7,6 +7,7 @@ end
 tracker = readSession(trackerPath);
 fixed = readSession(fixedPath);
 assert(abs(tracker.duration_s-fixed.duration_s)<0.01, 'Observation durations must match.');
+assert(tracker.excluded_intervals==0 && fixed.excluded_intervals==0, 'Select complete valid windows before comparison.');
 assert(fixed.energy_wh>0, 'Fixed energy must be positive.');
 summary = table([tracker.energy_wh;fixed.energy_wh], [tracker.peak_mw;fixed.peak_mw], ...
     [tracker.mean_mw;fixed.mean_mw], 'VariableNames', {'Energy_Wh','PeakPower_mW','MeanPower_mW'}, 'RowNames', {'Tracked','Fixed'});

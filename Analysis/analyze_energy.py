@@ -153,6 +153,7 @@ def main():
         if role in files and hashlib.sha256(path.read_bytes()).hexdigest()!=files[role].get("sha256"):
             raise ValueError("Input CSV does not match metadata checksum: "+role)
     for warning in quality["warnings"]: print("Data warning:",warning)
+    if args.require_complete_metadata and quality["warnings"]: raise ValueError("Acquisition metadata requires review")
     args.output.mkdir(parents=True,exist_ok=True)
     data_kind=meta.get("data_kind") or "unspecified"
     result={"protocol":meta["protocol"],"data_kind":data_kind,"acquisition_metadata":meta,"data_quality":quality,"tracker":{k:v for k,v in t.items() if k!="rows"},"fixed":{k:v for k,v in f.items() if k!="rows"},"gross_energy_gain_pct":gain}
