@@ -17,6 +17,8 @@ A dual-microcontroller prototype combining STM32 LDR pan-tilt tracking with ESP3
 
 ![Logger wiring](Hardware/Schematics/logger_wiring.png)
 
+Copy `Firmware/ESP32_Logger/secrets.example.h` to `Firmware/ESP32_Logger/secrets.h` (git-ignored) before flashing the ESP32.
+
 ## Quick build
 
 ```powershell

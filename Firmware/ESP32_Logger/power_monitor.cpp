@@ -18,7 +18,8 @@ PowerSample PowerMonitor_Read(uint32_t now) {
     s.voltage_v = monitor.getBusVoltage_V();
     s.current_ma = monitor.getCurrent_mA();
     s.power_mw = s.voltage_v * s.current_ma;
-    s.valid = isfinite(s.voltage_v) && isfinite(s.current_ma) && s.voltage_v >= 0 && s.current_ma >= 0;
+    s.valid = isfinite(s.voltage_v) && isfinite(s.current_ma) &&
+        s.voltage_v >= 0 && s.current_ma >= 0 && s.current_ma <= MAX_CURRENT_A * 1000;
     if (!s.valid) s.voltage_v = s.current_ma = s.power_mw = NAN;
     return s;
 }
