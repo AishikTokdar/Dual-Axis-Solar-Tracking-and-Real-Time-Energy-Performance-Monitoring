@@ -32,7 +32,7 @@ PID output changes a pulse-width target rather than a measured angle. Command di
 | Low-light hold | Ambient below 100 ADC counts | `tracker_config.h` |
 | Startup ramp | 50 steps x 20 ms | `main.c` |
 
-Target outputs are clamped to configured pan and tilt microsecond limits. Invalid ADC results hold the last pulse command and reset filter initialization. Low light clears axis state and holds current commands. Sensor rails alone cannot distinguish a disconnected LDR from darkness or strong illumination; wiring checks remain necessary.
+At a target limit, integral accumulation that drives further into saturation is cleared. Invalid ADC results hold the last pulse command and reset filter initialization. Low light clears axis state and holds current commands. Sensor rails alone cannot distinguish a disconnected LDR from darkness or strong illumination; wiring checks remain necessary.
 
 ## Timing evidence
 

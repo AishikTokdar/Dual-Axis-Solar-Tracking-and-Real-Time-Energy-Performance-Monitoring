@@ -43,7 +43,9 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 TrackerState tracker;
+volatile uint32_t tracker_overruns = 0;
 volatile uint32_t tracker_adc_failures = 0;
+volatile uint32_t tracker_max_loop_ms = 0;
   /* USER CODE END PV */
 
 void SystemClock_Config(void);
@@ -115,6 +117,9 @@ if ((int32_t)(HAL_GetTick()-next_tick)>=0) {
         Tracker_Update(&tracker,readings,valid,dt);
         __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,(uint16_t)(tracker.pan_us+0.5f));
         __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_3,(uint16_t)(tracker.tilt_us+0.5f));
+        uint32_t elapsed=HAL_GetTick()-started;
+        if (elapsed>tracker_max_loop_ms) tracker_max_loop_ms=elapsed;
+        if (elapsed>=LOOP_PERIOD_MS) ++tracker_overruns;
     }
   }
   /* USER CODE END 3 */
