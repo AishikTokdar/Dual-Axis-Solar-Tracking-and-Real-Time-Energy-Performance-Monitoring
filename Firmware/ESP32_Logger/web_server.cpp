@@ -3,12 +3,14 @@
 #include "dashboard_generated.h"
 #include <WebServer.h>
 #include <WiFi.h>
+#include <esp_system.h>
 static WebServer server(80);
+static uint32_t boot_id = 0;
 static String number(float x, unsigned precision = 3) { return isfinite(x) ? String(x, precision) : String("null"); }
 static void data() {
     const PowerSample &s = logger.latest;
     String j; j.reserve(1400);
-    j = "{\"sample_id\":" + String(s.id) + ",\"uptime_ms\":" + String(s.uptime_ms);
+    j = "{\"boot_id\":" + String(boot_id) + ",\"sample_id\":" + String(s.id) + ",\"uptime_ms\":" + String(s.uptime_ms);
     j += ",\"sample_age_ms\":" + String(millis() - s.uptime_ms) + ",\"valid\":" + (s.valid ? "true" : "false");
     j += ",\"voltage_v\":" + number(s.voltage_v, 5) + ",\"current_ma\":" + number(s.current_ma, 5);
     j += ",\"power_mw\":" + number(s.power_mw, 5) + ",\"device_energy_wh\":" + String(logger.device_energy.watt_hours, 6);
@@ -42,6 +44,7 @@ static void csv() {
     server.sendContent("");
 }
 void Web_Begin() {
+    boot_id = esp_random();
     server.on("/", HTTP_GET, []() { server.send_P(200, "text/html", DASHBOARD_HTML); });
     server.on("/data", HTTP_GET, data);
     server.on("/start", HTTP_POST, []() {

@@ -34,4 +34,8 @@ python -m platformio run -d Firmware/STM32_Tracker
 python -m platformio run -e esp32_logger
 ```
 
+**Tracked: 1.4125 Wh vs Fixed: 0.5707 Wh (+147.50% gross energy gain).**
+
+![Experimental performance](Analysis/Results/reported_comparison.png)
+
 Updated control hysteresis (50-80 counts, 40% exit), INA226 register checks (`CheckedINA226`), dashboard freshness (`>2.5 s`), and matching `<=2.5 s` gap exclusion in Python/MATLAB analysis.

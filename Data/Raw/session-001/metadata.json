@@ -4,9 +4,47 @@
   "protocol": "sequential",
   "tracker_start_utc": null,
   "fixed_start_utc": null,
+  "local_timezone": null,
   "duration_s": 10800,
-  "panel_identifiers": { "tracker": null, "fixed": null },
+  "panel_identifiers": {
+    "tracker": null,
+    "fixed": null
+  },
   "panel_rated_w": 0.9,
   "load_ohms": 47,
-  "shunt_ohms": 0.1
+  "shunt_ohms": 0.1,
+  "fixed_azimuth_deg": null,
+  "fixed_tilt_deg": null,
+  "firmware_revision": null,
+  "calibration_record": null,
+  "weather_and_shading": null,
+  "operator_notes": "Original acquisition notes are required to resolve panel identifiers, start times, orientation, weather, calibration, acquisition method, firmware revision, and processing history. Unknown values have not been inferred from the report publication date or current firmware.",
+  "schema_version": 1,
+  "notes": "Compare tracked vs fixed under sequential protocol",
+  "processing_history": null,
+  "acquisition_method": null,
+  "metadata_status": "incomplete_acquisition_record",
+  "parameter_sources": {
+    "protocol": "Sequential comparison described in the original report; acquisition notes for these CSVs were not supplied.",
+    "duration_s": "Last minus first CSV timestamp; both records span 10800 seconds.",
+    "load_ohms": "V/I in both CSVs is approximately 47 ohms, consistent with the original report; fitted component not independently checked.",
+    "panel_rated_w": "Nominal design rating (6 V, 150 mA), not a verified identifier or rating for the acquired panels.",
+    "shunt_ohms": "Configured design value from firmware/original report; fitted shunt and calibration not independently checked."
+  },
+  "provenance": {
+    "owner_statement": "The project owner identifies the supplied CSVs as direct device exports.",
+    "current_firmware_attribution": "Not established: voltage increments, decimal formatting, and record counts differ from the current RAM CSV export.",
+    "processing_status": "Unknown. Preserve supplied values; rounding them to match current firmware would not recover original sensor codes.",
+    "acquisition_dates": "Not recoverable from elapsed timestamps. Filesystem modification times and the technical report publication date are not acquisition dates."
+  },
+  "files": {
+    "tracker": {
+      "path": "tracker.csv",
+      "sha256": "0da01c3f6269a4fc0774554dc2bc5b349eb8d4bd2520e52d23a28af7ae5d0804"
+    },
+    "fixed": {
+      "path": "fixed.csv",
+      "sha256": "76ebe83b99351ab96451674979d313eab0dd038d2a7abb5dac900121238a5e67"
+    }
+  }
 }

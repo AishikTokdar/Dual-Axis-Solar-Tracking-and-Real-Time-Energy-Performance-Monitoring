@@ -26,6 +26,7 @@ def main():
                 last_id = d["sample_id"]
                 if start_ms is None:
                     start_ms = d["uptime_ms"]
+                if "boot_id" in d and d["sample_age_ms"] > 2500: continue
                 t_s = (d["uptime_ms"] - start_ms) / 1000.0
                 writer.writerow([
                     f"{t_s:.3f}",
