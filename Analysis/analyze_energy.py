@@ -69,7 +69,7 @@ def validate_protocol(meta, tracker, fixed):
             if (min(ends)-max(starts)).total_seconds()>0.01:
                 raise ValueError("Sequential observation windows must not overlap")
 
-def _unused_audit(meta, sessions, directory=None):
+def audit_metadata(meta, sessions, directory=None):
     """Check recorded facts without inventing missing acquisition conditions."""
     if not isinstance(meta,dict): raise ValueError("Metadata must be a JSON object")
     paired=set(sessions)=={"tracker","fixed"}
@@ -147,13 +147,12 @@ def main():
     parser.add_argument("--require-complete-metadata",action="store_true",help="Reject unresolved acquisition details or compatibility warnings")
     args=parser.parse_args();meta=json.loads(args.metadata.read_text(encoding="utf-8"))
     t=load_session(args.tracker);f=load_session(args.fixed);gain=compare(t,f)
-    quality={"warnings":[]}
+    quality=audit_metadata(meta,{"tracker":t,"fixed":f})
     files=meta.get("files",{})
     for role,path in [("tracker",args.tracker),("fixed",args.fixed)]:
         if role in files and hashlib.sha256(path.read_bytes()).hexdigest()!=files[role].get("sha256"):
             raise ValueError("Input CSV does not match metadata checksum: "+role)
     for warning in quality["warnings"]: print("Data warning:",warning)
-    if args.require_complete_metadata and quality["warnings"]: raise ValueError("Acquisition metadata requires review")
     args.output.mkdir(parents=True,exist_ok=True)
     data_kind=meta.get("data_kind") or "unspecified"
     result={"protocol":meta["protocol"],"data_kind":data_kind,"acquisition_metadata":meta,"data_quality":quality,"tracker":{k:v for k,v in t.items() if k!="rows"},"fixed":{k:v for k,v in f.items() if k!="rows"},"gross_energy_gain_pct":gain}

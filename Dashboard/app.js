@@ -44,7 +44,7 @@ function controls(){
  $('stop').disabled=!available||!d.recording;
  $('reset').disabled=!available;
  const exportable=available&&!d.recording&&d.count>0;
- $('download').classList.toggle('disabled',!exportable);
+ $('download').classList.toggle('disabled',!exportable);$('download').setAttribute('aria-disabled',String(!exportable));$('download').tabIndex=exportable?0:-1;
  for(const id of ['start','stop','reset'])$(id).setAttribute('aria-busy',String(actionBusy));
 }
 function freshness(){

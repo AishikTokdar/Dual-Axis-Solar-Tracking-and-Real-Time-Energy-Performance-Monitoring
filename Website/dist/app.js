@@ -50,7 +50,10 @@ function selectMetric(key){
   document.querySelectorAll('[data-metric]').forEach(button=>{const active=button.dataset.metric===key;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
 }
 document.querySelectorAll('[data-metric]').forEach(button=>button.addEventListener('click',()=>selectMetric(button.dataset.metric)));
-fetch('assets/project-data.json').then(r=>r.json()).then(data=>{if(data.metrics)metrics=data.metrics;selectMetric('energy');}).catch(()=>{selectMetric('energy');});
+fetch('assets/project-data.json').then(response=>{if(!response.ok)throw new Error('Reference data unavailable');return response.json();}).then(data=>{
+  if(!data.metrics||!Object.keys(metricSettings).every(key=>[data.metrics[key]?.tracker,data.metrics[key]?.fixed].every(value=>Number.isFinite(value)&&value>=0)))throw new Error('Invalid reference metrics');
+  metrics=data.metrics;selectMetric('energy');
+}).catch(()=>{selectMetric('energy');});
 
 function updateEnergy(){
   const milliwatts=Number(byId('model-power').value),minutes=Number(byId('model-time').value),energy=milliwatts/1000*minutes/60;
@@ -60,4 +63,4 @@ function updateEnergy(){
   byId('energy-desc').textContent=`At a constant ${milliwatts} milliwatts for ${minutes} minutes, calculated energy is ${energy.toFixed(4)} watt-hours.`;
 }
 ['model-power','model-time'].forEach(id=>byId(id).addEventListener('input',updateEnergy));updateEnergy();
-const video=document.querySelector('video');if(video)video.muted=true;
+const video=document.querySelector('video');video.muted=true;video.addEventListener('volumechange',()=>{if(!video.muted)video.muted=true;});
