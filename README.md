@@ -24,6 +24,8 @@ Copy `Firmware/ESP32_Logger/secrets.example.h` to `Firmware/ESP32_Logger/secrets
 
 ![Physical assembly](Images/system_photo.jpeg)
 
+[Project report](Docs/Project_Report.pdf) | [Demonstration video](Videos/system_demonstration.mp4)
+
 Paired 3-hour exports (`10,801` samples) are stored in [Data](Data/README.md). See [Calibration](Hardware/Calibration.md) and the [static project website](Website/dist/index.html).
 
 ## Quick build
