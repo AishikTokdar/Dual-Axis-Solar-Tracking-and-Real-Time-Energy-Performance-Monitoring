@@ -33,3 +33,5 @@ python Tools/package_dashboard.py
 python -m platformio run -d Firmware/STM32_Tracker
 python -m platformio run -e esp32_logger
 ```
+
+Updated control hysteresis (50-80 counts, 40% exit), INA226 register checks (`CheckedINA226`), dashboard freshness (`>2.5 s`), and matching `<=2.5 s` gap exclusion in Python/MATLAB analysis.

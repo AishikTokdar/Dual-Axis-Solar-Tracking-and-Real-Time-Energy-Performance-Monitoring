@@ -7,13 +7,18 @@ static WebServer server(80);
 static String number(float x, unsigned precision = 3) { return isfinite(x) ? String(x, precision) : String("null"); }
 static void data() {
     const PowerSample &s = logger.latest;
-    String j = "{"sample_id":" + String(s.id) + ","uptime_ms":" + String(s.uptime_ms);
-    j += ","valid":" + String(s.valid ? "true" : "false");
-    j += ","voltage_v":" + number(s.voltage_v, 5) + ","current_ma":" + number(s.current_ma, 5);
-    j += ","power_mw":" + number(s.power_mw, 5) + ","device_energy_wh":" + String(logger.device_energy.watt_hours, 6);
-    j += ","session_energy_wh":" + String(logger.session_energy.watt_hours, 6);
-    j += ","recording":" + String(logger.recording ? "true" : "false") + ","full":" + (logger.full ? "true" : "false");
-    j += ","count":" + String(logger.count) + ","capacity":" + String(logger.entries ? LOG_CAPACITY : 0) + ","graph":[";
+    String j; j.reserve(1400);
+    j = "{\"sample_id\":" + String(s.id) + ",\"uptime_ms\":" + String(s.uptime_ms);
+    j += ",\"sample_age_ms\":" + String(millis() - s.uptime_ms) + ",\"valid\":" + (s.valid ? "true" : "false");
+    j += ",\"voltage_v\":" + number(s.voltage_v, 5) + ",\"current_ma\":" + number(s.current_ma, 5);
+    j += ",\"power_mw\":" + number(s.power_mw, 5) + ",\"device_energy_wh\":" + String(logger.device_energy.watt_hours, 6);
+    j += ",\"session_energy_wh\":" + String(logger.session_energy.watt_hours, 6);
+    j += ",\"utilization_pct\":" + number(s.power_mw / (PANEL_RATED_W * 10.0f));
+    j += ",\"recording\":" + String(logger.recording ? "true" : "false") + ",\"full\":" + (logger.full ? "true" : "false");
+    j += ",\"count\":" + String(logger.count) + ",\"capacity\":" + String(logger.entries ? LOG_CAPACITY : 0);
+    uint32_t elapsed = logger.count ? logger.entries[logger.count - 1].elapsed_ms : 0;
+    j += ",\"elapsed_ms\":" + String(elapsed) + ",\"covered_ms\":" + String(logger.session_energy.covered_ms);
+    j += ",\"gap_count\":" + String(logger.session_energy.gaps) + ",\"graph\":[";
     unsigned start = (logger.graph_head + GRAPH_CAPACITY - logger.graph_count) % GRAPH_CAPACITY;
     for (unsigned i = 0; i < logger.graph_count; ++i) { if (i) j += ","; j += number(logger.graph[(start + i) % GRAPH_CAPACITY]); }
     j += "]}"; server.send(200, "application/json", j);

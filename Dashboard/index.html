@@ -10,21 +10,23 @@
 <main>
 <header class="page-header">
 <div><p class="instrument-label">Solar tracking / electrical measurements</p><h1>Dual-Axis Solar Tracking and Real-Time Energy Performance Monitoring</h1></div>
-<div class="connection-block"><p class="field-label">Acquisition status</p><strong id="connection" data-state="waiting">Connecting</strong><span id="response-time">No response yet</span></div>
+<div class="connection-block"><p class="field-label">Acquisition status</p><strong id="connection" role="status" aria-live="polite" data-state="waiting">Connecting</strong><span id="response-time">No response yet</span></div>
 </header>
-<section class="readouts">
+<section class="readouts" aria-label="Electrical measurements">
 <article><h2>Panel voltage</h2><div class="numeric"><strong id="voltage">--</strong><span>V</span></div><p>INA226 bus measurement</p></article>
 <article><h2>Panel current</h2><div class="numeric"><strong id="current">--</strong><span>mA</span></div><p>Current through the shunt</p></article>
 <article class="power-readout"><h2>Output power</h2><div class="numeric"><strong id="power">--</strong><span>mW</span></div><p>Voltage multiplied by current</p></article>
 <article class="energy-readout"><h2>Session energy</h2><div class="numeric"><strong id="energy">--</strong><span>Wh</span></div><p>Integrated during recording</p></article>
 </section>
 <div class="workspace">
-<section class="chart-panel"><div class="panel-heading"><h2>Recent power samples</h2><span id="history-count">No samples</span></div><canvas id="chart"></canvas></section>
-<section class="session-panel"><div class="panel-heading"><h2>Recording session</h2><strong id="recording">Idle</strong></div>
+<section class="chart-panel" aria-labelledby="chart-title"><div class="panel-heading"><h2 id="chart-title">Recent power samples</h2><span id="history-count">No samples</span></div><canvas id="chart" role="img" aria-label="Power sample history" aria-describedby="chart-summary"></canvas><p id="chart-summary" class="chart-summary">Waiting for the first valid power sample.</p><p class="note">Sample order is shown at equal spacing. Missing readings break the trace; spacing does not represent elapsed time.</p></section>
+<section class="session-panel" aria-labelledby="session-title"><div class="panel-heading"><h2 id="session-title">Recording session</h2><strong id="recording" data-state="idle">Idle</strong></div>
 <dl class="session-values"><div><dt>Elapsed time</dt><dd id="elapsed">--</dd></div><div><dt>Recorded samples</dt><dd id="count">--</dd></div></dl>
-<div class="recording-actions"><button id="start" type="button">Start recording</button><div class="secondary-actions"><button id="stop" type="button" class="secondary">Stop</button><a id="download" class="button secondary" href="/csv" download="solar_session.csv">Export CSV</a></div><button id="reset" type="button" class="reset">Reset measurements</button></div>
-</section>
+<label class="capacity-label" for="capacity"><span>Buffer capacity</span><span id="capacity-percent">--</span></label><progress id="capacity" value="0" max="3600">0%</progress>
+<div class="recording-actions"><button id="start" type="button" disabled>Start recording</button><div class="secondary-actions"><button id="stop" type="button" class="secondary" disabled>Stop</button><a id="download" class="button secondary disabled" href="/csv" download="solar_session.csv" aria-disabled="true" tabindex="-1">Export CSV</a></div><button id="reset" type="button" class="reset" disabled>Reset measurements</button></div>
+<p class="note" id="session-note">Recording is stored in RAM. Export before resetting or powering off.</p></section>
 </div>
-<footer><p id="status">Waiting for device.</p></footer>
+<section class="measurement-details" aria-labelledby="details-title"><h2 id="details-title">Measurement details</h2><dl><div><dt>Sample age</dt><dd id="sample-age">--</dd></div><div><dt>Sample ID</dt><dd id="sample-id">--</dd></div><div><dt>Integrated time</dt><dd id="covered-time">--</dd></div><div><dt>Excluded intervals</dt><dd id="gaps">--</dd></div><div><dt>Rated-power utilization</dt><dd id="utilization">--</dd></div></dl><p class="note">Integrated time includes valid adjacent samples no more than 2.5 seconds apart. Utilization compares output with the configured 0.9 W panel rating; it is not solar conversion efficiency.</p></section>
+<footer><p id="status" role="status" aria-live="polite">Waiting for the device. Acquisition runs independently of this page.</p></footer>
 </main><script src="app.js"></script>
 </body></html>
