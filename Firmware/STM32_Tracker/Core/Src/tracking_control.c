@@ -9,17 +9,20 @@ static float axis_step(AxisState *a, float measurement, float dt, float toleranc
     if (a->active && fabsf(error) <= tolerance * EXIT_RATIO) { idle(a, measurement); return 0.0f; }
     if (!a->active) {
         a->previous_measurement = measurement;
-        if (fabsf(error) >= tolerance) { a->active = 1; a->previous_error = error; }
-        else return 0.0f;
+        if (fabsf(error) >= tolerance) {
+            if (++a->confirm < CONFIRM_THRESH) return 0.0f;
+            a->active = 1; a->previous_error = error;
+        } else { a->confirm = 0; return 0.0f; }
     }
     a->integral = clamp(a->integral + 0.5f * (error + a->previous_error) * dt, -20.0f, 20.0f);
     float raw = -(measurement - a->previous_measurement) / dt;
-    a->previous_measurement = measurement; a->previous_error = error;
-    return -(0.0045f * error + 0.002f * a->integral + 0.0005f * raw);
+    float k = 0.075f;
+    a->derivative = (1.0f - k) / (1.0f + k) * a->derivative + k / (1.0f + k) * (raw + a->previous_derivative);
+    a->previous_derivative = raw; a->previous_measurement = measurement; a->previous_error = error;
+    return -(0.0045f * error + 0.002f * a->integral + 0.0005f * a->derivative);
 }
 void Tracker_Init(TrackerState *s) {
-    memset(s, 0, sizeof(*s));
-    s->target_pan = s->pan_us = PAN_HOME; s->target_tilt = s->tilt_us = TILT_HOME;
+    memset(s, 0, sizeof(*s)); s->target_pan = s->pan_us = PAN_HOME; s->target_tilt = s->tilt_us = TILT_HOME;
 }
 void Tracker_Update(TrackerState *s, const uint16_t v[4], uint8_t valid, float dt) {
     for (unsigned i = 0; i < 4; ++i) if (v[i] > 4095U) valid = 0;

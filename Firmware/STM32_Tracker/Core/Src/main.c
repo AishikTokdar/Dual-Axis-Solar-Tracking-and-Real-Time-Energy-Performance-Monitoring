@@ -43,7 +43,7 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 TrackerState tracker;
-
+volatile uint32_t tracker_adc_failures = 0;
   /* USER CODE END PV */
 
 void SystemClock_Config(void);
@@ -109,6 +109,7 @@ if ((int32_t)(HAL_GetTick()-next_tick)>=0) {
         next_tick=started+LOOP_PERIOD_MS;
         uint16_t readings[4]={0};
         uint8_t valid=LDR_ReadAll(&hadc1,readings);
+        if (!valid) ++tracker_adc_failures;
         float dt=(started-previous)/1000.0f;
         previous=started;
         Tracker_Update(&tracker,readings,valid,dt);

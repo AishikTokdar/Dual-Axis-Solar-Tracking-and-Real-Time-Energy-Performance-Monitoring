@@ -10,3 +10,5 @@
 | `Valid` | 0 or 1 | Whether electrical values can be used |
 
 Invalid readings leave electrical fields blank and set `Valid=0`.
+
+Cumulative `Energy_Wh` must remain non-decreasing; split restarted captures into separate files.

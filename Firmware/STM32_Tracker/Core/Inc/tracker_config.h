@@ -6,6 +6,7 @@
 #define TOL_MIN 50.0f
 #define TOL_MAX 80.0f
 #define EXIT_RATIO 0.4f
+#define CONFIRM_THRESH 2U
 #define MAX_DELTA_PER_LOOP 15.0f
 #define PAN_MIN 500.0f
 #define PAN_MAX 2000.0f

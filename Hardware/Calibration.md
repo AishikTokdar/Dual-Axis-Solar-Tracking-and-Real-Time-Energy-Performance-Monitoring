@@ -9,4 +9,4 @@
 ## Voltage and current
 
 1. Confirm fitted shunt resistance (`0.1 ohm`) and I2C address (`0x40`).
-2. Compare voltage and current against a calibrated reference meter using `calibration_template.csv`.
+2. Compare voltage and current against a reference meter and record results outside `Data/Raw/` using [calibration template](calibration_template.csv).

@@ -10,6 +10,7 @@ def load_session(path, max_gap_s=2.5):
     total = covered = 0.0
     excluded = 0
     for a, b in zip(rows, rows[1:]):
+        if float(b["Time_s"]) <= float(a["Time_s"]) or float(b["Energy_Wh"]) < float(a["Energy_Wh"]): raise ValueError("Timestamps and energy must be monotonic")
         dt = float(b["Time_s"]) - float(a["Time_s"])
         if a["Valid"] == "1" and b["Valid"] == "1" and dt <= max_gap_s:
             total += (float(a["Power_mW"]) + float(b["Power_mW"])) * 0.5 * dt / 3600000

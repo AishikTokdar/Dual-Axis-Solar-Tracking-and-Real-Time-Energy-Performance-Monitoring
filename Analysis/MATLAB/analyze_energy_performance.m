@@ -14,6 +14,7 @@ end
 function result = readSession(path)
 t = readtable(path);
 time = t.Time_s; power = t.Power_mW; valid = t.Valid == 1;
+assert(all(isfinite(time)) && all(time >= 0) && all(diff(time) > 0) && all(diff(t.Energy_Wh) >= 0), 'Invalid timestamps or reset energy');
 dt = diff(time);
 pairs = valid(1:end-1) & valid(2:end) & dt <= 2.5;
 energyTerms = (power(1:end-1) + power(2:end)) .* 0.5 .* dt / 3600000;
