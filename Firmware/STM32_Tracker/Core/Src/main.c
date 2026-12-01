@@ -20,7 +20,9 @@
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-/* Initial inline proportional tracking loop */
+#include "tracker_config.h"
+#include "tracking_control.h"
+#include "ldr_sensors.h"
   /* USER CODE END Includes */
 
 /* USER CODE BEGIN PTD */
@@ -40,8 +42,8 @@ TIM_HandleTypeDef htim1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-static float pan_us = 1250.0f;
-static float tilt_us = 900.0f;
+TrackerState tracker;
+
   /* USER CODE END PV */
 
 void SystemClock_Config(void);
@@ -81,11 +83,19 @@ int main(void)
   MX_TIM1_Init();
 
   /* USER CODE BEGIN 2 */
-  if (HAL_ADCEx_Calibration_Start(&hadc1) != HAL_OK) Error_Handler();
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint16_t)pan_us);
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, (uint16_t)tilt_us);
+if (HAL_ADCEx_Calibration_Start(&hadc1) != HAL_OK) Error_Handler();
+  Tracker_Init(&tracker);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint16_t)PAN_MIN);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, (uint16_t)TILT_MIN);
   if (HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1) != HAL_OK ||
       HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3) != HAL_OK) Error_Handler();
+  for (unsigned i=1; i<=50; ++i) {
+      __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,(uint16_t)(PAN_MIN+(PAN_HOME-PAN_MIN)*i/50.0f));
+      __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_3,(uint16_t)(TILT_MIN+(TILT_HOME-TILT_MIN)*i/50.0f));
+      HAL_Delay(20);
+  }
+  uint32_t previous=HAL_GetTick();
+  uint32_t next_tick=previous+LOOP_PERIOD_MS;
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN WHILE */
@@ -94,28 +104,17 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    const uint32_t ch[4] = {ADC_CHANNEL_0, ADC_CHANNEL_1, ADC_CHANNEL_4, ADC_CHANNEL_5};
-    uint16_t ldr[4] = {0};
-    for (unsigned n = 0; n < 4; ++n) {
-      ADC_ChannelConfTypeDef s = {0};
-      s.Channel = ch[n];
-      s.Rank = ADC_REGULAR_RANK_1;
-      s.SamplingTime = ADC_SAMPLINGTIME_COMMON_1;
-      HAL_ADC_ConfigChannel(&hadc1, &s);
-      HAL_ADC_Start(&hadc1);
-      HAL_ADC_PollForConversion(&hadc1, 2);
-      ldr[n] = (uint16_t)HAL_ADC_GetValue(&hadc1);
-      HAL_ADC_Stop(&hadc1);
+if ((int32_t)(HAL_GetTick()-next_tick)>=0) {
+        uint32_t started=HAL_GetTick();
+        next_tick=started+LOOP_PERIOD_MS;
+        uint16_t readings[4]={0};
+        uint8_t valid=LDR_ReadAll(&hadc1,readings);
+        float dt=(started-previous)/1000.0f;
+        previous=started;
+        Tracker_Update(&tracker,readings,valid,dt);
+        __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,(uint16_t)(tracker.pan_us+0.5f));
+        __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_3,(uint16_t)(tracker.tilt_us+0.5f));
     }
-    float pan_err = ((float)ldr[1] + ldr[3] - ldr[0] - ldr[2]) * 0.5f;
-    float tilt_err = ((float)ldr[2] + ldr[3] - ldr[0] - ldr[1]) * 0.5f;
-    if (pan_err > 50.0f || pan_err < -50.0f) pan_us += pan_err * 0.01f;
-    if (tilt_err > 50.0f || tilt_err < -50.0f) tilt_us += tilt_err * 0.01f;
-    if (pan_us < 500.0f) pan_us = 500.0f; else if (pan_us > 2000.0f) pan_us = 2000.0f;
-    if (tilt_us < 500.0f) tilt_us = 500.0f; else if (tilt_us > 1300.0f) tilt_us = 1300.0f;
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (uint16_t)pan_us);
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, (uint16_t)tilt_us);
-    HAL_Delay(20);
   }
   /* USER CODE END 3 */
 }
