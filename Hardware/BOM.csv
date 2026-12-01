@@ -1,0 +1,11 @@
+Item,Specification,Quantity,Role,Notes
+STM32 board,NUCLEO-G031K8,1,Light-feedback control,16 MHz target
+ESP32 board,ESP32-WROOM-32,1,Power logger,PlatformIO esp32dev
+LDR,GL5528,4,Light sensing,10k voltage divider
+Divider resistor,10 kohm,4,LDR bridge,3.3 V supply
+Power monitor,INA226 breakout,1,Bus voltage and current,0.1 ohm shunt @ 0x40
+Pan and tilt servos,5 V hobby servos,2,Dual-axis mount,External 5 V rail
+Solar panel,6 V 150 mA,2,Tracked vs fixed tests,Nominal 0.9 W
+Load resistor,47 ohm 5 W,1,Shared test load,Sequential runs
+Servo supply,5 V 3 A,1,Actuator power,External supply
+Printed frame,Pan-tilt STL rig,1,Panel mount,See CAD/ATTRIBUTION.md

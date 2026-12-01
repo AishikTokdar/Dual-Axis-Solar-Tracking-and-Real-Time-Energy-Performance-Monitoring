@@ -1,0 +1,8 @@
+Debug/
+Release/
+.pio/
+*.o
+*.elf
+*.bin
+__pycache__/
+*.pyc
