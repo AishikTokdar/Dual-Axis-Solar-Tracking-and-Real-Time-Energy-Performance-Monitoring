@@ -13,6 +13,10 @@ A dual-microcontroller prototype combining STM32 LDR pan-tilt tracking with ESP3
 - `Hardware/` - [Pin mapping](Hardware/Pin_Mapping.md), [BOM](Hardware/BOM.csv), [schematic](Hardware/Schematics/hardware_schematic.pdf)
 - `Analysis/` - [Python & MATLAB energy evaluation](Analysis/README.md)
 
+![Tracker wiring](Hardware/Schematics/tracker_wiring.png)
+
+![Logger wiring](Hardware/Schematics/logger_wiring.png)
+
 ## Quick build
 
 ```powershell

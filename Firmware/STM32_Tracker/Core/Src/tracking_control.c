@@ -6,7 +6,7 @@
 static float clamp(float x, float lo, float hi) { return x < lo ? lo : (x > hi ? hi : x); }
 
 static float axis_step(AxisState *a, float measurement, float dt) {
-    float error = measurement;
+    float error = -measurement;
     if (fabsf(error) < DEADBAND_ADC) {
         a->active = 0;
         a->integral = 0.0f;
@@ -14,10 +14,11 @@ static float axis_step(AxisState *a, float measurement, float dt) {
         return 0.0f;
     }
     a->active = 1;
-    a->integral = clamp(a->integral + error * dt, -20.0f, 20.0f);
-    float deriv = (error - a->previous_error) / dt;
+    a->integral = clamp(a->integral + 0.5f * (error + a->previous_error) * dt, -20.0f, 20.0f);
+    float raw = -(measurement - a->previous_measurement) / dt;
+    a->previous_measurement = measurement;
     a->previous_error = error;
-    return 0.0045f * error + 0.002f * a->integral + 0.0005f * deriv;
+    return -(0.0045f * error + 0.002f * a->integral + 0.0005f * raw);
 }
 
 void Tracker_Init(TrackerState *s) {
@@ -27,6 +28,7 @@ void Tracker_Init(TrackerState *s) {
 }
 
 void Tracker_Update(TrackerState *s, const uint16_t v[4], uint8_t valid, float dt) {
+    for (unsigned i = 0; i < 4; ++i) if (v[i] > 4095U) valid = 0;
     s->valid = valid && isfinite(dt) && dt > 0.0f;
     if (!s->valid) return;
     float f[4];

@@ -1,7 +1,7 @@
 #include "ldr_sensors.h"
 #include "tracker_config.h"
 uint8_t LDR_ReadAll(ADC_HandleTypeDef *adc, uint16_t values[4]) {
-    const uint32_t channels[4] = {ADC_CHANNEL_0, ADC_CHANNEL_1, ADC_CHANNEL_4, ADC_CHANNEL_5};
+    const uint32_t channels[4] = {ADC_CHANNEL_4, ADC_CHANNEL_1, ADC_CHANNEL_5, ADC_CHANNEL_0};
     for (unsigned n=0; n<4; ++n) {
         ADC_ChannelConfTypeDef config = {0};
         config.Channel=channels[n]; config.Rank=ADC_REGULAR_RANK_1;
